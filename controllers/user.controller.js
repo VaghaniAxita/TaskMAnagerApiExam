@@ -1,28 +1,20 @@
-const User = require('../models/user.model');
+const User = require("../models/User.schema")
 
-exports.signup = async (req, res) => {
-  const { username, email, password } = req.body;
+const createUser=async(req,res)=>{
+  let {email}=req.body
 
-  try {
-    const user = new User({ username, email, password });
-    await user.save();
-    res.status(201).json({ message: 'User created successfully' });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+  let isUser=await User.findone({email:email})
+
+  if(isUser){
+    res.send({message:"User already exist"})
   }
-};
+  else{
+    let data=await User.create(req.body)
 
-exports.login = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.findOne({ email, password });
-    if (user) {
-      res.status(200).json({ message: 'Logged in successfully', token: 'dummy-token' }); // replace 'dummy-token' with actual token if needed
-    } else {
-      res.status(400).json({ message: 'Invalid credentials' });
-    }
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.send(data)
   }
-};
+}
+
+const LoggedIn=async(req,res)=>{
+  
+}
